@@ -3,9 +3,39 @@
  */
 package com.example.hypermetro;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.print("Hello world!");
+
+        File dataFile = new File(args[0]);
+
+        SinglyLinkedList<String> stations = new SinglyLinkedList<>();
+        stations.addNode("depot");
+        
+        try (Scanner scanner = new Scanner(dataFile)) {
+            
+            while (scanner.hasNext()) {
+                stations.addNode(scanner.nextLine());
+            }
+
+            stations.addNode("depot");
+            Node<String> tmp = stations.getHead();
+
+            while (tmp.getNext().hasNext()) {
+                System.out.printf("%s - %s - %s\n",
+                        tmp.getData(),
+                        tmp.getNext().getData(),
+                        tmp.getNext().getNext().getData());
+                tmp = tmp.getNext();
+            }
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("Error! Such a file doesn't exist!");
+        }
     }
 }
