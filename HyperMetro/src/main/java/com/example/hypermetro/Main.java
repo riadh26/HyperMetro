@@ -2,6 +2,8 @@ package com.example.hypermetro;
 
 import com.example.hypermetro.commands.*;
 import com.example.hypermetro.exception.CommandNotFoundException;
+import com.example.hypermetro.exception.LineNotFoundException;
+import com.example.hypermetro.exception.StationNotFoundException;
 import com.example.hypermetro.metro.Metro;
 import com.example.hypermetro.utils.JsonUtils;
 import com.google.gson.JsonObject;
@@ -32,7 +34,9 @@ public class Main {
                         break;
                     }
                     executor.execute(command);
-                } catch (CommandNotFoundException e) {
+                } catch (CommandNotFoundException
+                        | LineNotFoundException
+                        | StationNotFoundException e) {
                     System.out.println(e.getMessage());
                 }
             }

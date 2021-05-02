@@ -79,16 +79,6 @@ public class DoublyLinkedList<T> {
         size--;
     }
 
-    public DoublyLinkedList<T> copy() {
-        DoublyLinkedList<T> copy = new DoublyLinkedList<>();
-        Node<T> tmp = head;
-        while (tmp != null) {
-            copy.addLast(tmp.getData());
-            tmp = tmp.getNext();
-        }
-        return copy;
-    }
-
     public Node<T> getHead() {
         return head;
     }
@@ -108,16 +98,11 @@ public class DoublyLinkedList<T> {
     @Override
     public String toString() {
         Node<T> tmp = head;
-        StringBuilder list = new StringBuilder();
-        while (tmp.getNext().hasNext()) {
-            list.append(String.format(
-                    "%s - %s - %s\n",
-                    tmp.getData(),
-                    tmp.getNext().getData(),
-                    tmp.getNext().getNext().getData())
-            );
+        StringBuilder output = new StringBuilder();
+        while (tmp != null) {
+            output.append(tmp.getData()).append("\n");
             tmp = tmp.getNext();
         }
-        return list.toString();
+        return output.toString();
     }
 }

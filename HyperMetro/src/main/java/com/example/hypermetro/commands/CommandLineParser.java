@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public final class CommandLineParser {
 
+    private static final Pattern connectPattern;
     private static final Pattern appendPattern;
     private static final Pattern addHeadPattern;
     private static final Pattern removePattern;
@@ -15,10 +16,11 @@ public final class CommandLineParser {
     private static final Pattern exitPattern;
 
     static {
-
-        String argRegex = "\\w+|\"(?=\\S)[\\s\\w]+\"";
+        String argRegex = "[\\w.]+|\"(?=\\S)[\\s\\w.]+\"";
         String twoArgsRegex = "(?<line>" + argRegex + ")\\s+(?<station>" + argRegex + ")";
+        String fourArgsRegex = twoArgsRegex + "\\s+(?<line2>" + argRegex + ")\\s+(?<station2>" + argRegex + ")";
 
+        connectPattern = Pattern.compile("^/connect\\s+" + fourArgsRegex + "$");
         appendPattern = Pattern.compile("^/append\\s+" + twoArgsRegex + "$");
         addHeadPattern = Pattern.compile("^/add-head\\s+" + twoArgsRegex + "$");
         removePattern = Pattern.compile("^/remove\\s+" + twoArgsRegex + "$");
@@ -29,6 +31,7 @@ public final class CommandLineParser {
     private CommandLineParser() { }
 
     public static Command parse(String input) {
+        Matcher connectMatcher = connectPattern.matcher(input);
         Matcher appendMatcher = appendPattern.matcher(input);
         Matcher addHeadMatcher = addHeadPattern.matcher(input);
         Matcher removeMatcher = removePattern.matcher(input);
@@ -36,7 +39,7 @@ public final class CommandLineParser {
         Matcher exitMatcher = exitPattern.matcher(input);
 
         if (exitMatcher.matches()) {
-            return new ExitCommand();
+            System.exit(0);
         }
 
         if (outputMatcher.matches()) {
@@ -61,6 +64,15 @@ public final class CommandLineParser {
             return new RemoveCommand(
                     removeMatcher.group("line").replace("\"", "").trim(),
                     removeMatcher.group("station").replace("\"", "").trim()
+            );
+        }
+
+        if (connectMatcher.matches()) {
+            return new ConnectCommand(
+                    connectMatcher.group("line").replace("\"", "").trim(),
+                    connectMatcher.group("station").replace("\"", "").trim(),
+                    connectMatcher.group("line2").replace("\"", "").trim(),
+                    connectMatcher.group("station2").replace("\"", "").trim()
             );
         }
         throw new CommandNotFoundException();
