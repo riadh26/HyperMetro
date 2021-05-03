@@ -39,7 +39,7 @@ public final class CommandLineParser {
         Matcher exitMatcher = exitPattern.matcher(input);
 
         if (exitMatcher.matches()) {
-            System.exit(0);
+            return new ExitCommand();
         }
 
         if (outputMatcher.matches()) {
